@@ -1,5 +1,5 @@
 import { Cell, flexRender, Row } from "@tanstack/react-table";
-import { Fragment, memo, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import { Person } from "./makeData";
 
 export type DataRowProps = {
@@ -10,8 +10,10 @@ export type DataRowProps = {
 
 export const DataRow: React.FC<DataRowProps> = memo(({ row, index, onCellChange }) => {
     const render = useRef(0)
-    
-    render.current++
+    useEffect(() =>{
+        render.current++
+    })
+
     return (
         < >
             {row.getVisibleCells().map((cell: Cell<any, any>) => {

@@ -1,8 +1,7 @@
 import {
-    Row,
-    flexRender,
-} from '@tanstack/react-table'
-import { memo, useMemo, useRef } from 'react';
+    flexRender, Row
+} from '@tanstack/react-table';
+import { useEffect, useRef } from 'react';
 import { DataRow } from './DataRow';
 
 import { Person } from "./makeData";
@@ -14,9 +13,12 @@ export type TableRowProps = {
     onCellChange: (rowIndex: number, columnId: string, value: any, rowId: number) => void
 }
 
-export const TableRow: React.FC<TableRowProps> = ({ row,memoRow, index, onCellChange }) => {
+export const TableRow: React.FC<TableRowProps> = ({ row, memoRow, index, onCellChange }) => {
     const renders = useRef(0)
-    renders.current++
+    useEffect(() =>{
+        renders.current++
+    })
+    if (index === 0) console.log('render')
     return (
         <tr key={row.id}>
             {row.getIsGrouped() ?
@@ -26,18 +28,17 @@ export const TableRow: React.FC<TableRowProps> = ({ row,memoRow, index, onCellCh
                         return <td>{renders.current}</td>
                     return (
                         <td
-                            {...{
-                                key: cell.id,
-                                style: {
-                                    background: cell.getIsGrouped()
-                                        ? '#0aff0082'
-                                        : cell.getIsAggregated()
-                                            ? '#ffa50078'
-                                            : cell.getIsPlaceholder()
-                                                ? '#ff000042'
-                                                : 'white',
-                                },
+                            key={cell.id}
+                            style={{
+                                background: cell.getIsGrouped()
+                                    ? '#0aff0082'
+                                    : cell.getIsAggregated()
+                                        ? '#ffa50078'
+                                        : cell.getIsPlaceholder()
+                                            ? '#ff000042'
+                                            : 'white',
                             }}
+
                         >
                             {cell.getIsGrouped() ? (
                                 // If it's a grouped cell, add an expander and row count
@@ -79,7 +80,10 @@ export const TableRow: React.FC<TableRowProps> = ({ row,memoRow, index, onCellCh
                         </td>
                     )
                 })
-                : <DataRow row={memoRow} index={index} onCellChange={onCellChange} />
+                : <DataRow
+                    row={memoRow}
+                    index={index}
+                    onCellChange={onCellChange} />
 
 
             }

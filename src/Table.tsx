@@ -69,7 +69,7 @@ const inputCell: Partial<ColumnDef<Person>> = {
     },
 }
 
-const serverData = makeData(100)
+const serverData = makeData(5)
 type OriginalData = Person
 
 const mergeChangedData = (changed: Array<Partial<Person>>, old: Array<Person>) => {
@@ -174,12 +174,13 @@ export function TableComponent() {
         debugTable: true,
         autoResetExpanded: false
     })
-    console.log(changedData)
+    console.log(changedData, data)
 
     const [rows, setRows] = useState<Array<Row<Person>>>(() => flattenGroupedRows(table.getRowModel().rows))
 
-    const flattenedRows = useMemo(() => flattenGroupedRows(table.getRowModel().rows)
-        , [expanded, rows])
+    const flattenedRows = useMemo(() =>
+        flattenGroupedRows(table.getRowModel().rows)
+        , [expanded, rows, changedData])
 
     const onCellChange = useCallback((rowIndex: number, columnId: string, value: any, rowId: number) => {
         setRows((prev: any) => {
@@ -208,7 +209,7 @@ export function TableComponent() {
     useEffect(() => {
         setRows(flattenedRows)
     }, [expanded])
-    
+
     return (
         <div className="p-2">
             <div className="h-2" />
